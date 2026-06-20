@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="EcoTrack AI — Carbon Footprint Calculator & Intelligence Platform" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>EcoTrack AI — Carbon Footprint Calculator</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="theme-dark" aria-live="polite">
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-inner container-lg">
+      <div class="brand" aria-hidden="true">
+       <div class="brand">
+    <img src="image/image_ET.png"
+     alt="EcoTrack AI Logo"
+     class="logo">
+</div>
+        <span class="brand-text">EcoTrack AI</span>
+      </div>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#" class="nav-link">Platform</a>
+        <a href="#" class="nav-link">Solutions</a>
+        <a href="#" class="nav-link">Pricing</a>
+        <a href="#" class="nav-cta" id="download-cta">Download Report</a>
+        <button class="theme-toggle" id="themeToggle" aria-pressed="false" aria-label="Toggle color theme">🌙</button>
+      </nav>
+    </div>
+  </header>
+  <!-- HERO -->
+  <section class="hero container-lg">
+    
+    <div class="hero-grid">
+      <div class="hero-content glass">
+        <div class="hero-badge">
+    ✨ AI Powered
+</div>
+        <h1 class="hero-title">
+    Carbon intelligence for<br>
+    <span class="modern-teams">modern teams</span>
+</h1>
+        <p class="hero-sub">Measure. Visualize. Reduce. AI-powered recommendations and beautiful analytics to help you shrink your footprint.</p>
+
+        <div class="hero-stats" role="list" aria-hidden="true">
+          <div class="stat-card" role="listitem">
+            <div class="stat-number" data-target="12">0</div>
+            <div class="stat-label">Years of Research</div>
+          </div>
+          <div class="stat-card" role="listitem">
+            <div class="stat-number" data-target="120k">0</div>
+            <div class="stat-label">KG CO₂ Saved</div>
+          </div>
+          <div class="stat-card" role="listitem">
+            <div class="stat-number" data-target="3.7">0</div>
+            <div class="stat-label">Avg Eco Score</div>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <a href="#calculator" class="btn btn-primary">Try the Calculator</a>
+          <a href="#insights" class="btn btn-outline">View Insights</a>
+        </div>
+      </div>
+
+      <div class="hero-panel glass" id="calculator">
+        <div class="panel-header">
+          <div>
+            <h3>Carbon Footprint Calculator</h3>
+            <p class="muted">Estimate emissions quickly — built for teams and individuals.</p>
+          </div>
+        </div>
+
+        <form id="calcForm" class="calc-form" onsubmit="event.preventDefault(); calculate();">
+          <label class="field">
+            <span class="field-label">Bike Travel (KM)</span>
+            <input id="bike" type="number" min="0" step="any" inputmode="decimal" placeholder="e.g. 10" />
+          </label>
+
+          <label class="field">
+            <span class="field-label">Transport Type</span>
+            <select id="transport" aria-label="Transport Type">
+              <option value="petrol">Petrol Car</option>
+              <option value="diesel">Diesel Car</option>
+              <option value="ev">Electric Vehicle</option>
+              <option value="bus">Bus</option>
+              <option value="train">Train</option>
+            </select>
+            <small class="muted" id="transport-hint">Per-km factor applied to car input: 0.20 kg/km (default)</small>
+          </label>
+
+          <label class="field">
+            <span class="field-label">Car Travel (KM)</span>
+            <input id="car" type="number" min="0" step="any" placeholder="e.g. 30" />
+          </label>
+
+          <label class="field">
+            <span class="field-label">Electricity Usage (kWh)</span>
+            <input id="electricity" type="number" min="0" step="any" placeholder="e.g. 12" />
+          </label>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-primary" onclick="calculate()">Calculate Footprint</button>
+            <button type="button" class="btn btn-secondary" onclick="downloadReport()">Download Report</button>
+          </div>
+        </form>
+
+        <div class="result-grid" id="results">
+          <div class="result-card glass">
+            <div class="result-title">Carbon Footprint</div>
+            <div class="result-value" id="result">-- kg</div>
+            <div class="muted small" id="result-sub">Total emissions</div>
+          </div>
+
+          <div class="result-card glass">
+            <div class="result-title">Eco Score</div>
+            <div class="eco-meter" id="ecoMeter" aria-hidden="true">
+              <svg viewBox="0 0 36 36" class="circular">
+                <path class="circle-bg" d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <path class="circle" id="meterPath" stroke-dasharray="0, 100" d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <text x="18" y="20.35" class="meter-text" id="meterText">--%</text>
+              </svg>
+            </div>
+            <div class="muted small" id="level">--</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="container-lg main-grid" id="insights">
+    <section class="glass panel chart-panel" aria-labelledby="breakdownHeading">
+      <div class="panel-header">
+        <h3 id="breakdownHeading">Emission Breakdown</h3>
+        <div class="muted small">Detailed per-source breakdown</div>
+      </div>
+
+      <div class="chart-wrap">
+        <canvas id="carbonChart" aria-label="Carbon emission breakdown chart" role="img"></canvas>
+        <div class="legend" id="chartLegend" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <aside class="panel cards-column">
+      <div class="glass stat-glass animated-card">
+        <div class="stat-head">
+          <h4>Trees Needed</h4>
+          <p class="muted small">To offset today's emissions</p>
+        </div>
+        <div class="stat-number big" id="trees">0</div>
+      </div>
+
+      <div class="glass stat-glass animated-card">
+        <div class="stat-head">
+          <h4>Yearly CO₂</h4>
+          <p class="muted small">Projected annual emissions</p>
+        </div>
+        <div class="stat-number big" id="annual">0 kg</div>
+      </div>
+
+      <div class="glass ai-panel" aria-live="polite" id="aiPanel">
+        <div class="panel-header">
+          <h4>AI Recommendations</h4>
+        </div>
+        <div id="suggestion" class="ai-suggestions">
+          <p>Use the calculator to get personalized recommendations.</p>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container-lg footer-grid">
+      <div>
+        <strong>EcoTrack AI</strong>
+        <p class="muted">AI-powered carbon intelligence for people and teams.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#">Docs</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-brand">
+        <small>© 2026 EcoTrack AI</small>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="script.js" defer></script>
+</body>
+</html>
